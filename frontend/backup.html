@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JeeVa | System Terminal</title>
+    <meta name="description" content="JeeVa - Full-Stack Dev | Cybersecurity | Problem Solver. Matrix-style developer portfolio.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #000000;
+            --accent-color: #00ff41;
+            --accent-dark: rgba(0, 255, 65, 0.4);
+            --accent-glow: 0 0 10px rgba(0, 255, 65, 0.8), 0 0 20px rgba(0, 255, 65, 0.5);
+            --hover-tint: rgba(0, 255, 65, 0.1);
+            --border-dim: rgba(0, 255, 65, 0.3);
+            --hud-bracket: 2px solid var(--accent-color);
+        }
+
+        ::selection { background: var(--accent-color); color: var(--bg-color); }
+        ::-moz-selection { background: var(--accent-color); color: var(--bg-color); }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-color); border-left: 1px dashed var(--border-dim); }
+        ::-webkit-scrollbar-thumb { background: var(--accent-dark); }
+        ::-webkit-scrollbar-thumb:hover { background: var(--accent-color); }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; cursor: crosshair; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--accent-color);
+            font-family: 'Share Tech Mono', monospace;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Scanline Overlay & CRT Vignette */
+        .scanlines {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.3) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.05), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.05));
+            background-size: 100% 3px, 4px 100%;
+            z-index: 9998; pointer-events: none; opacity: 0.5;
+        }
+        
+        .vignette {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: radial-gradient(circle, rgba(0,0,0,0) 60%, rgba(0,0,0,0.85) 100%);
+            z-index: 9997; pointer-events: none;
+        }
+
+        /* Dynamic Matrix Canvas */
+        canvas#matrix-rain {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            z-index: 0; opacity: 0.18; pointer-events: none;
+            transition: opacity 1s ease;
+        }
+
+        /* Terminal Boot Screen */
+        #boot-screen {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background-color: var(--bg-color); z-index: 10000;
+            display: flex; flex-direction: column; padding: 50px;
+            font-size: 1.3rem; text-shadow: 0 0 5px var(--accent-color);
+        }
+
+        /* Sci-Fi Corners HUD */
+        .viewport-hud {
+            position: fixed; top: 20px; left: 20px; right: 20px; bottom: 20px;
+            pointer-events: none; z-index: 9996;
+        }
+        .hud-corner { position: absolute; width: 40px; height: 40px; border: var(--hud-bracket); opacity: 0.6; transition: all 0.3s ease; }
+        .hud-tl { top: 0; left: 0; border-right: none; border-bottom: none; }
+        .hud-tr { top: 0; right: 0; border-left: none; border-bottom: none; }
+        .hud-bl { bottom: 0; left: 0; border-right: none; border-top: none; }
+        .hud-br { bottom: 0; right: 0; border-left: none; border-top: none; }
+
+        .container { position: relative; z-index: 10; max-width: 1100px; margin: 0 auto; padding: 0 20px; }
+
+        h1, h2, h3, .orbitron { font-family: 'Orbitron', sans-serif; text-shadow: var(--accent-glow); letter-spacing: 2px; }
+
+        a { color: var(--accent-color); text-decoration: none; transition: all 0.3s ease; position: relative; }
+        a:hover { text-shadow: var(--accent-glow); }
+
+        .section-label {
+            margin-bottom: 3rem; opacity: 0.8; font-size: 1.2rem;
+            display: inline-block; padding: 5px 15px; border-left: 3px solid var(--accent-color);
+            background: linear-gradient(90deg, rgba(0,255,65,0.15) 0%, transparent 100%);
+        }
+
+        section {
+            min-height: 100vh; display: flex; flex-direction: column; justify-content: center;
+            padding: 120px 0; border-bottom: 1px dashed var(--border-dim); position: relative;
+        }
+
+        /* Premium Nav */
+        nav {
+            position: fixed; top: 0; left: 0; width: 100%; display: flex; justify-content: space-between; align-items: center;
+            padding: 20px 40px; background: rgba(0, 0, 0, 0.85); border-bottom: 1px solid var(--border-dim);
+            z-index: 100; backdrop-filter: blur(8px);
+        }
+        .logo { font-size: 2.2rem; font-weight: 700; display: flex; align-items: center; }
+        .logo-text { position: relative; transition: color 0.3s; }
+        .logo:hover .logo-text { animation: glitch-text 0.2s linear infinite; color: #fff; text-shadow: 2px 2px var(--accent-color), -2px -2px var(--accent-color); }
+
+        .nav-links { display: flex; gap: 30px; }
+        .nav-links a { font-size: 1.1rem; padding: 5px 15px; border: 1px solid transparent; position: relative; }
+        .nav-links a::before { content: '['; position: absolute; left: 0; opacity: 0; transition: all 0.3s; }
+        .nav-links a::after { content: ']'; position: absolute; right: 0; opacity: 0; transition: all 0.3s; }
+        .nav-links a:hover::before { left: -5px; opacity: 1; }
+        .nav-links a:hover::after { right: -5px; opacity: 1; }
+        .nav-links a.active { background: var(--hover-tint); border: 1px solid var(--border-dim); box-shadow: inset 0 0 10px rgba(0,255,65,0.1); }
+
+        /* Scramble Effects */
+        .scramble-text { display: inline-block; }
+
+        /* Hero */
+        .hero { align-items: flex-start; }
+        .hero p.tagline { font-size: 1.2rem; margin-bottom: 15px; opacity: 0.8; }
+        .hero h1 { font-size: clamp(3.5rem, 8vw, 6.5rem); margin-bottom: 10px; line-height: 1.1; display: inline-block; }
+        .hero h2 { font-family: 'Share Tech Mono', monospace; font-size: clamp(1.2rem, 3vw, 1.8rem); font-weight: normal; margin-bottom: 35px; opacity: 0.9; }
+        
+        .bio-container {
+            font-size: 1.2rem; max-width: 800px; margin-bottom: 50px; min-height: 120px;
+            background: rgba(0, 255, 65, 0.03); padding: 25px; border-left: 4px solid var(--accent-color);
+            position: relative;
+        }
+        .bio-container::before { content: ''; position: absolute; top:0; right:0; width: 20px; height: 20px; border-top: 2px solid var(--accent-color); border-right: 2px solid var(--accent-color); opacity: 0.5; }
+        .bio-container::after { content: ''; position: absolute; bottom:0; right:0; width: 20px; height: 20px; border-bottom: 2px solid var(--accent-color); border-right: 2px solid var(--accent-color); opacity: 0.5; }
+
+        .blinking-cursor { display: inline-block; width: 12px; height: 1.2rem; background-color: var(--accent-color); animation: blink 1s step-end infinite; vertical-align: middle; margin-left: 8px; }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+        .cta-buttons { display: flex; gap: 20px; }
+        .btn {
+            display: inline-block; padding: 14px 30px; font-family: 'Share Tech Mono', monospace; font-size: 1.1rem;
+            color: var(--accent-color); border: 1px solid var(--accent-color); background: transparent; transition: all 0.3s ease;
+            text-transform: uppercase; position: relative; overflow: hidden; letter-spacing: 1px;
+        }
+        .btn::before {
+            content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 65, 0.4), transparent); transition: left 0.5s ease;
+        }
+        .btn:hover::before { left: 100%; }
+        .btn.solid { background-color: var(--hover-tint); box-shadow: inset 0 0 10px rgba(0,255,65,0.2); }
+        .btn:hover { background-color: var(--accent-color); color: var(--bg-color); box-shadow: var(--accent-glow); font-weight: bold; }
+
+        /* Dynamic Cards */
+        .card { border: 1px solid var(--border-dim); padding: 30px; background: rgba(0, 0, 0, 0.6); transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); position: relative; backdrop-filter: blur(4px); }
+        .card::before, .card::after { content: ''; position: absolute; width: 15px; height: 15px; border: 2px solid var(--accent-color); transition: all 0.3s; pointer-events: none;}
+        .card::before { top: -2px; left: -2px; border-right: none; border-bottom: none; opacity: 0; }
+        .card::after { bottom: -2px; right: -2px; border-left: none; border-top: none; opacity: 0; }
+        .card:hover { border-color: var(--accent-color); box-shadow: 0 0 25px rgba(0, 255, 65, 0.15); transform: translateY(-8px); z-index: 2; background: rgba(0, 255, 65, 0.05); }
+        .card:hover::before, .card:hover::after { opacity: 1; width: 25px; height: 25px; }
+
+        /* About Section */
+        .about-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; }
+        .card h3 { margin-bottom: 20px; font-size: 1.5rem; display: flex; align-items: center; gap: 10px; border-bottom: 1px dashed var(--border-dim); padding-bottom: 10px; }
+        .stat-card { text-align: center; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+        .stat-card .stat-number { font-size: 5rem; margin-top: 10px; line-height: 1; text-shadow: var(--accent-glow); }
+
+        /* Skills Integration */
+        .skills-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; }
+        .skill-chip { border: 1px solid var(--border-dim); padding: 25px; transition: all 0.4s ease; position: relative; background: rgba(0,0,0,0.6); }
+        .skill-chip:hover { border-color: var(--accent-color); box-shadow: inset 0 0 20px rgba(0, 255, 65, 0.1); background: var(--hover-tint); transform: scale(1.03); z-index: 5;}
+        .skill-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .skill-name { font-size: 1.3rem; font-weight: bold; display: flex; align-items: center; gap: 10px; }
+        .skill-category { font-size: 0.8rem; opacity: 0.8; border: 1px dashed rgba(0, 255, 65, 0.5); padding: 3px 8px; background: rgba(0,255,65,0.1); }
+        .progress-bar-bg { width: 100%; height: 6px; background: rgba(0, 255, 65, 0.2); position: relative; overflow: hidden; }
+        .progress-bar-fill { height: 100%; background: var(--accent-color); width: 0; transition: width 2s cubic-bezier(0.1, 0.8, 0.3, 1); box-shadow: 0 0 12px var(--accent-color); position: relative;}
+        .progress-bar-fill::after { content: ''; position: absolute; top:0; right:0; bottom:0; width:15px; background:rgba(255,255,255,0.8); opacity:0.6; filter: blur(3px); }
+        .skill-percent { text-align: right; margin-top: 10px; font-size: 1.1rem; font-family: 'Orbitron', sans-serif;}
+
+        /* Projects Section */
+        .project-card { border: 1px solid var(--border-dim); border-left: 5px solid var(--accent-color); padding: 45px; background: rgba(0, 0, 0, 0.7); transition: all 0.4s ease; position: relative;}
+        .project-card:hover { border-color: var(--accent-color); box-shadow: var(--accent-glow); background: rgba(0, 255, 65, 0.04); }
+        .project-card::before { content: '[ DATA_MOUNTED ]'; position: absolute; top: -14px; right: 25px; background: var(--bg-color); padding: 0 12px; font-size: 0.9rem; opacity: 0.9; border: 1px solid var(--border-dim); border-bottom: none; }
+        .project-card h3 { font-size: 2.5rem; margin-bottom: 10px; }
+        .project-subtitle { font-size: 1.3rem; margin-bottom: 25px; opacity: 0.9; }
+        .project-tags { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 35px; }
+        .tag { border: 1px dotted var(--accent-color); padding: 6px 14px; font-size: 0.95rem; background: rgba(0, 255, 65, 0.08); transition: all 0.3s; }
+        .tag:hover { background: var(--accent-color); color: var(--bg-color); }
+        .project-desc { font-size: 1.15rem; margin-bottom: 40px; max-width: 850px; line-height: 1.7; }
+
+        /* Contact Protocol */
+        .contact-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; }
+        .contact-card { display: flex; flex-direction: column; text-align: center; align-items: center; justify-content: center; min-height: 160px; }
+        .contact-label { font-size: 1.1rem; opacity: 0.7; margin-bottom: 12px; letter-spacing: 3px; font-family: 'Orbitron', sans-serif;}
+        .contact-value { font-size: 1.25rem; word-break: break-all; transition: all 0.3s; }
+        .contact-card:hover .contact-value { transform: scale(1.05); text-shadow: var(--accent-glow); }
+        .contact-card:hover .contact-label { opacity: 1; color: #fff; }
+
+        /* Footer System Status */
+        footer { padding: 30px 20px; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-dim); font-size: 1rem; max-width: 1100px; margin: 0 auto; position: relative; z-index: 10; }
+        .footer-left { display: flex; align-items: center; gap: 20px; }
+        .sys-status { display: flex; align-items: center; gap: 10px; border: 1px solid rgba(0,255,65,0.5); padding: 6px 18px; border-radius: 2px; }
+        .pulsing-dot { width: 12px; height: 12px; background-color: var(--accent-color); border-radius: 50%; box-shadow: 0 0 10px var(--accent-color); animation: pulse 1.2s infinite; }
+        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(0, 255, 65, 0.9); } 70% { box-shadow: 0 0 0 12px rgba(0, 255, 65, 0); } 100% { box-shadow: 0 0 0 0 rgba(0, 255, 65, 0); } }
+
+        @keyframes glitch-text {
+            0% { transform: translate(0) }
+            20% { transform: translate(-2px, 2px) }
+            40% { transform: translate(-2px, -2px) }
+            60% { transform: translate(2px, 2px) }
+            80% { transform: translate(2px, -2px) }
+            100% { transform: translate(0) }
+        }
+
+        @media (max-width: 768px) {
+            nav { flex-direction: column; padding: 15px; position: absolute; }
+            .nav-links { gap: 12px; flex-wrap: wrap; justify-content: center; margin-top: 15px; }
+            section { padding: 90px 0; }
+            .hero { padding-top: 160px; }
+            .hero h1 { font-size: 3.2rem; }
+            .cta-buttons { flex-direction: column; gap: 15px; }
+            .btn { text-align: center; }
+            footer { flex-direction: column; gap: 20px; text-align: center; }
+            .viewport-hud { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- CRT Monitoring Effects -->
+    <div class="scanlines"></div>
+    <div class="vignette"></div>
+    
+    <!-- Edge Tech HUD Brackets -->
+    <div class="viewport-hud">
+        <div class="hud-corner hud-tl"></div>
+        <div class="hud-corner hud-tr"></div>
+        <div class="hud-corner hud-bl"></div>
+        <div class="hud-corner hud-br"></div>
+    </div>
+
+    <!-- Initialization Boot Sequence -->
+    <div id="boot-screen">
+        <div id="boot-text"></div>
+    </div>
+
+    <canvas id="matrix-rain"></canvas>
+
+    <nav>
+        <div class="logo orbitron"><span class="logo-text">JeeVa</span><span class="blinking-cursor">_</span></div>
+        <div class="nav-links">
+            <a href="#about" class="nav-item" data-target="about">About</a>
+            <a href="#skills" class="nav-item" data-target="skills">Skills</a>
+            <a href="#projects" class="nav-item" data-target="projects">Projects</a>
+            <a href="#contact" class="nav-item" data-target="contact">Contact</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- 01 -> HERO -->
+        <section id="hero" class="hero" data-section="hero">
+            <p class="tagline">// initializing user profile</p>
+            <h1 class="orbitron scramble-text" data-original="JEEVA">JEEVA</h1>
+            <h2 class="scramble-text" data-original="Full-Stack Dev | Cybersecurity | Problem Solver">Full-Stack Dev | Cybersecurity | Problem Solver</h2>
+            
+            <div class="bio-container">
+                <span id="typed-text"></span><span class="blinking-cursor"></span>
+            </div>
+
+            <div class="cta-buttons">
+                <a href="#projects" class="btn solid"><span class="scramble-text" data-original="View Project →">View Project &rarr;</span></a>
+                <a href="#contact" class="btn"><span class="scramble-text" data-original="Contact Me">Contact Me</span></a>
+            </div>
+        </section>
+
+        <!-- 02 -> ABOUT -->
+        <section id="about" data-section="about">
+            <div class="section-label">// about_me.js</div>
+            <div class="about-grid">
+                <div class="card">
+                    <h3 class="orbitron">> Who_I_Am</h3>
+                    <p>A driven learner blending full-stack development, cybersecurity, and problem-solving, who values perfection over speed and thrives under challenge.</p>
+                </div>
+                <div class="card">
+                    <h3 class="orbitron">> Current_Focus</h3>
+                    <p>Calm under pressure&hellip; until things break &mdash; then turns it into a comeback. Constantly building, securing, and optimizing web platforms and systems.</p>
+                </div>
+                <div class="card stat-card">
+                    <h3 class="orbitron scramble-text" data-original="Live_Projects">Live_Projects</h3>
+                    <div class="orbitron stat-number">01</div>
+                </div>
+                <div class="card stat-card">
+                    <h3 class="orbitron scramble-text" data-original="Stack_Depth">Stack_Depth</h3>
+                    <div class="orbitron stat-number">06</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 03 -> SKILLS -->
+        <section id="skills" data-section="skills">
+            <div class="section-label">// core_competencies.json</div>
+            <div class="skills-grid" id="skills-container">
+                <!-- Managed via JS Logic below -->
+            </div>
+        </section>
+
+        <!-- 04 -> PROJECTS -->
+        <section id="projects" data-section="projects">
+            <div class="section-label">// execution_logs/projects</div>
+            <div class="project-card">
+                <h3 class="orbitron scramble-text" data-original="Nextt Campus">Nextt Campus</h3>
+                <p class="project-subtitle">Smart Campus Resource Optimization Platform</p>
+                <div class="project-tags">
+                    <span class="tag">Full-Stack</span>
+                    <span class="tag">Web App</span>
+                    <span class="tag">Resource Management</span>
+                    <span class="tag">Deployed on Vercel</span>
+                </div>
+                <p class="project-desc">
+                    Web-based platform to streamline classroom, lab, and facility usage. Reduces scheduling conflicts, improves accessibility, centralizes campus resource management. Foundation for real-time booking, smart recommendations, and admin control.
+                </p>
+                <a href="https://nextt-campus.vercel.app/" target="_blank" rel="noopener noreferrer" class="btn">Execute Link &rArr;</a>
+            </div>
+        </section>
+
+        <!-- 05 -> CONTACT -->
+        <section id="contact" data-section="contact">
+            <div class="section-label">// communication_protocols</div>
+            <div class="contact-grid">
+                <a href="mailto:Jeetvarshney2007@gmail.com" class="card contact-card">
+                    <div class="contact-label scramble-text" data-original="EMAIL">EMAIL</div>
+                    <div class="contact-value">Jeetvarshney2007@gmail.com</div>
+                </a>
+                <a href="https://github.com/Jeet-Varshney" target="_blank" rel="noopener noreferrer" class="card contact-card">
+                    <div class="contact-label scramble-text" data-original="GITHUB">GITHUB</div>
+                    <div class="contact-value">github.com/Jeet-Varshney</div>
+                </a>
+                <a href="https://www.linkedin.com/in/jeetvarshney" target="_blank" rel="noopener noreferrer" class="card contact-card">
+                    <div class="contact-label scramble-text" data-original="LINKEDIN">LINKEDIN</div>
+                    <div class="contact-value">linkedin.com/in/jeetvarshney</div>
+                </a>
+                <a href="https://x.com/jeet7varshney" target="_blank" rel="noopener noreferrer" class="card contact-card">
+                    <div class="contact-label scramble-text" data-original="TWITTER / X">TWITTER / X</div>
+                    <div class="contact-value">x.com/jeet7varshney</div>
+                </a>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <div class="footer-left">
+            <div class="sys-status">
+                <div class="pulsing-dot"></div>
+                <span>SYS.ONLINE</span>
+            </div>
+            <span>JeeVa &copy; 2025</span>
+        </div>
+        <div class="footer-right">
+            <span>Built with code &amp; zero compromises</span>
+        </div>
+    </footer>
+
+    <script>
+        // --- 1. Terminal Boot Sequence Engine ---
+        const bootTextObj = document.getElementById('boot-text');
+        const bootScreen = document.getElementById('boot-screen');
+        const bootLines = [
+            'INITIALIZING KERNEL... [OK]',
+            'LOADING SECURITY PROTOCOLS... [OK]',
+            'ESTABLISHING SECURE CONNECTION... [OK]',
+            'DECRYPTING ASSETS... [OK]',
+            'MOUNTING USER PROFILE: JEEVA...',
+            'ACCESS GRANTED.'
+        ];
+        
+        let bootLineIdx = 0;
+        function playBootSequence() {
+            if (bootLineIdx < bootLines.length) {
+                bootTextObj.innerHTML += `> ${bootLines[bootLineIdx]}<br>`;
+                bootLineIdx++;
+                setTimeout(playBootSequence, Math.random() * 150 + 100);
+            } else {
+                setTimeout(() => {
+                    bootScreen.style.transition = "opacity 0.6s ease";
+                    bootScreen.style.opacity = "0";
+                    setTimeout(() => {
+                        bootScreen.style.display = "none";
+                        startHeroTyping();
+                    }, 600);
+                }, 500);
+            }
+        }
+        window.addEventListener('load', playBootSequence);
+
+        // --- 2. Advanced Section-Aware Matrix Rain ---
+        // Character sets dynamically switch based on the section the user is observing
+        const canvas = document.getElementById('matrix-rain');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const charSets = {
+            hero: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズヅブヅエェケセテネヘメレゲゼデベペオォコソトノホモヨョロゴゾドボポヴッンJEEVA',
+            about: '01',
+            skills: '{}[]<>/\\*+=-_0123456789ABCDEF',
+            projects: '█▓▒░|+=-~',
+            contact: '.-_@'
+        };
+
+        let currentChars = charSets.hero;
+        let rainSpeed = 45;
+        let densityThresh = 0.975;
+        const fontSize = 16;
+        let columns = Math.floor(canvas.width / fontSize);
+        let drops = Array(columns).fill(0).map(() => Math.random() * canvas.height / fontSize);
+        let rainInterval;
+
+        function drawMatrix() {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.08)'; // Trail fading effect
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.font = fontSize + 'px "Share Tech Mono"';
+
+            for (let i = 0; i < drops.length; i++) {
+                const text = currentChars.charAt(Math.floor(Math.random() * currentChars.length));
+                
+                // Randomly highlight the head of the drop
+                if (Math.random() > 0.92) {
+                    ctx.fillStyle = '#ebffeb';
+                    ctx.shadowBlur = 8;
+                    ctx.shadowColor = '#00ff41';
+                } else {
+                    ctx.fillStyle = '#00ff41';
+                    ctx.shadowBlur = 0;
+                }
+
+                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+                if (drops[i] * fontSize > canvas.height && Math.random() > densityThresh) {
+                    drops[i] = 0;
+                }
+                drops[i]++;
+            }
+        }
+        
+        function startRain() {
+            if(rainInterval) clearInterval(rainInterval);
+            rainInterval = setInterval(drawMatrix, rainSpeed);
+        }
+        startRain();
+
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            columns = Math.floor(canvas.width / fontSize);
+            drops = Array(columns).fill(0).map(() => Math.random() * canvas.height / fontSize);
+        });
+
+        // --- 3. Hero Bio Typewriter Effect ---
+        const bioText = '"A driven learner blending full-stack development, cybersecurity, and problem-solving, who values perfection over speed and thrives under challenge. Calm under pressure... until things break — then turns it into a comeback."';
+        const typedTextElement = document.getElementById('typed-text');
+        let charIndex = 0;
+        let isTypingStarted = false;
+
+        function typeWriter() {
+            if (charIndex < bioText.length) {
+                typedTextElement.textContent += bioText.charAt(charIndex);
+                charIndex++;
+                setTimeout(typeWriter, 25); // Slightly faster typing
+            }
+        }
+        function startHeroTyping() {
+            if(!isTypingStarted) {
+                isTypingStarted = true;
+                setTimeout(typeWriter, 300);
+            }
+        }
+
+        // --- 4. Render Skills Data dynamically ---
+        const skillsData = [
+            { name: 'Node.js', percent: 72, icon: '⚡', category: 'Backend' },
+            { name: 'C/C++', percent: 65, icon: '⚙️', category: 'Systems' },
+            { name: 'Python', percent: 68, icon: '🐍', category: 'Cyber/Scripting' },
+            { name: 'HTML', percent: 85, icon: '📄', category: 'Frontend' },
+            { name: 'CSS', percent: 80, icon: '🎨', category: 'Frontend' },
+            { name: 'Canva', percent: 78, icon: '✨', category: 'Design' }
+        ];
+
+        const skillsContainer = document.getElementById('skills-container');
+        skillsData.forEach(skill => {
+            skillsContainer.insertAdjacentHTML('beforeend', `
+                <div class="skill-chip">
+                    <div class="skill-header">
+                        <span class="skill-name">${skill.icon} ${skill.name}</span>
+                        <span class="skill-category">${skill.category}</span>
+                    </div>
+                    <div class="progress-bar-bg">
+                        <div class="progress-bar-fill" data-width="${skill.percent}%"></div>
+                    </div>
+                    <div class="skill-percent">${skill.percent}%</div>
+                </div>
+            `);
+        });
+
+        // --- 5. Semantic JS Section Differentiation & Scramble Effect ---
+        
+        // Decrypt / Scramble effect for section titles
+        function scrambleText(element) {
+            const original = element.getAttribute('data-original');
+            if(!original) return;
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$*&%';
+            let iterations = 0;
+            const interval = setInterval(() => {
+                element.innerText = original.split('').map((letter, index) => {
+                    if(index < iterations || letter === ' ') return original[index];
+                    return chars[Math.floor(Math.random() * chars.length)];
+                }).join('');
+                if(iterations >= original.length) clearInterval(interval);
+                iterations += 1/3;
+            }, 30);
+        }
+
+        const sections = document.querySelectorAll('section');
+        const navItems = document.querySelectorAll('.nav-item');
+        
+        // Configuration for how the Matrix rain behaves per section
+        const sectionConfigs = {
+            hero: { speed: 45, density: 0.975 },
+            about: { speed: 35, density: 0.94 },     // Faster Binary rain
+            skills: { speed: 25, density: 0.98 },    // Very fast Hex decoding
+            projects: { speed: 65, density: 0.99 },  // Slow chunky loading blocks
+            contact: { speed: 45, density: 0.96 }    // Moderate morse code
+        };
+
+        const sectionObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const id = entry.target.getAttribute('data-section');
+                    
+                    // Trigger text scrambles specifically inside the activating section
+                    const scrambles = entry.target.querySelectorAll('.scramble-text');
+                    scrambles.forEach(el => scrambleText(el));
+
+                    // Trigger Skill Progress bar fill animations
+                    if(id === 'skills') {
+                        entry.target.querySelectorAll('.progress-bar-fill').forEach(bar => {
+                            bar.style.width = bar.getAttribute('data-width');
+                        });
+                    }
+
+                    // Update Top Navigation highlighting
+                    navItems.forEach(nav => {
+                        nav.classList.remove('active');
+                        if (nav.getAttribute('data-target') === id) nav.classList.add('active');
+                    });
+
+                    // Modulate the Matrix Environment explicitly using JS
+                    // This "differentiates every section" dramatically behind the scenes
+                    if(charSets[id]) {
+                        currentChars = charSets[id];
+                        rainSpeed = sectionConfigs[id].speed;
+                        densityThresh = sectionConfigs[id].density;
+                        startRain(); // Refresh interval loop
+                        
+                        // Mild canvas opacity shifts to reflect environmental change
+                        if(id === 'skills' || id === 'projects') {
+                            canvas.style.opacity = '0.22'; 
+                        } else {
+                            canvas.style.opacity = '0.18';
+                        }
+                    }
+                }
+            });
+        }, { threshold: 0.4 }); // Trigger when 40% of the section is visible
+
+        sections.forEach(sec => sectionObserver.observe(sec));
+
+    </script>
+</body>
+</html>
