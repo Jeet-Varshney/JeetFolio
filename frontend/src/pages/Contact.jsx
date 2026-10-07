@@ -23,10 +23,10 @@ const TwitterIcon = () => (
 );
 
 const contactLinks = [
-  { label: 'Email', value: 'Jeetvarshney2007@gmail.com', action: 'Send Message', link: 'mailto:Jeetvarshney2007@gmail.com', color: '#ea4335', icon: <MailIcon /> },
-  { label: 'GitHub', value: 'Jeet-Varshney', action: 'View Profile', link: 'https://github.com/Jeet-Varshney', color: '#181717', icon: <GitHubIcon /> },
-  { label: 'LinkedIn', value: 'jeetvarshney', action: 'Connect', link: 'https://www.linkedin.com/in/jeetvarshney', color: '#0a66c2', icon: <LinkedInIcon /> },
-  { label: 'Twitter / X', value: 'jeet7varshney', action: 'Follow', link: 'https://x.com/jeet7varshney', color: '#000000', icon: <TwitterIcon /> },
+  { label: 'Email', value: 'Jeetvarshney2007@gmail.com', action: 'Send Message', link: 'mailto:Jeetvarshney2007@gmail.com', color: '#ff4d4d', icon: <MailIcon /> },
+  { label: 'GitHub', value: 'Jeet-Varshney', action: 'View Profile', link: 'https://github.com/Jeet-Varshney', color: '#38bdf8', icon: <GitHubIcon /> },
+  { label: 'LinkedIn', value: 'jeetvarshney', action: 'Connect', link: 'https://www.linkedin.com/in/jeetvarshney', color: '#60a5fa', icon: <LinkedInIcon /> },
+  { label: 'Twitter / X', value: 'jeet7varshney', action: 'Follow', link: 'https://x.com/jeet7varshney', color: '#818cf8', icon: <TwitterIcon /> },
 ];
 
 const Contact = () => {
@@ -42,13 +42,13 @@ const Contact = () => {
       }}>
         Pick a{' '}
         <span style={{
-          background: 'linear-gradient(135deg, #ff758c, #ffb199)',
+          background: 'linear-gradient(135deg, #3333FF, #00C8FF)',
           WebkitBackgroundClip: 'text',
           WebkitTextFillColor: 'transparent',
           backgroundClip: 'text',
         }}>Card</span>
       </h2>
-      <p style={{ fontSize: '1rem', color: 'rgba(45,36,36,0.6)' }}>
+      <p style={{ fontSize: '1rem', color: 'rgba(226, 232, 240, 0.70)' }}>
         Hover over the cards to view details and connect.
       </p>
 
@@ -81,7 +81,7 @@ const Contact = () => {
           transform: translateY(-64px) rotate(0deg) scale(1.15) !important;
           opacity: 1 !important;
           z-index: 100 !important;
-          box-shadow: 0 30px 60px rgba(255, 117, 140, 0.16), 0 10px 25px rgba(45, 36, 36, 0.05) !important;
+          box-shadow: 0 30px 60px rgba(0, 0, 0, 0.60), 0 0 40px rgba(51, 51, 255, 0.35) !important;
         }
         
         .contact-card:hover .action-btn {
@@ -125,10 +125,11 @@ const Contact = () => {
                   style={{
                     width: '100%',
                     height: '100%',
-                    background: '#ffffff', // Solid white playing card
+                    background: 'rgba(13, 19, 36, 0.88)', // Dark midnight playing card
                     borderRadius: 16,
-                    border: '1px solid rgba(255,117,140,0.15)',
-                    boxShadow: '0 8px 30px rgba(45,36,36,0.04)',
+                    border: '1px solid rgba(51, 51, 255, 0.30)',
+                    boxShadow: '0 12px 36px rgba(0,0,0,0.50)',
+                    backdropFilter: 'blur(16px)',
                     display: 'flex',
                     flexDirection: 'column',
                     padding: 14,
@@ -159,12 +160,12 @@ const Contact = () => {
                      </div>
                      <h3 style={{ 
                        fontFamily: "'Outfit', sans-serif", fontSize: '1.8rem', 
-                       color: '#2d2424', margin: 0, lineHeight: 1.1 
+                       color: '#ffffff', margin: 0, lineHeight: 1.1 
                      }}>
                        {c.label}
                      </h3>
                      <span style={{ 
-                       fontSize: '0.85rem', color: 'rgba(45,36,36,0.6)', 
+                       fontSize: '0.85rem', color: 'rgba(226, 232, 240, 0.70)', 
                        marginTop: 8, fontWeight: 500 
                      }}>
                        {c.value}

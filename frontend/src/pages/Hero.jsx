@@ -16,9 +16,9 @@ const Hero = () => {
       <div style={{
         display: 'inline-flex', alignItems: 'center', gap: 8,
         padding: '6px 14px',
-        border: '1px solid rgba(255,117,140,0.35)',
+        border: '1px solid rgba(51, 51, 255, 0.35)',
         borderRadius: 99,
-        background: 'rgba(255,117,140,0.1)',
+        background: 'rgba(51, 51, 255, 0.1)',
         backdropFilter: 'blur(8px)',
         marginBottom: 28,
         opacity: visible ? 1 : 0,
@@ -26,12 +26,12 @@ const Hero = () => {
         transition: 'all 0.6s cubic-bezier(0.4,0,0.2,1)',
       }}>
         <span style={{
-          width: 7, height: 7, borderRadius: '50%', background: '#ff758c',
-          boxShadow: '0 0 8px #ff758c', animation: 'pulse 2s infinite'
+          width: 7, height: 7, borderRadius: '50%', background: '#3333FF',
+          boxShadow: '0 0 8px #3333FF', animation: 'pulse 2s infinite'
         }} />
         <span style={{
           fontSize: '0.78rem', fontWeight: 600, letterSpacing: '0.1em',
-          color: 'rgba(45,36,36,0.7)', textTransform: 'uppercase',
+          color: 'rgba(226, 232, 240, 0.85)', textTransform: 'uppercase',
           fontFamily: "'Outfit', sans-serif",
         }}>Available for opportunities</span>
       </div>
@@ -47,10 +47,10 @@ const Hero = () => {
         transform: visible ? 'translateY(0)' : 'translateY(20px)',
         transition: 'all 0.7s cubic-bezier(0.4,0,0.2,1) 0.1s',
       }}>
-        <span style={{ color: '#2d2424' }}>JEET</span>
+        <span style={{ color: '#ffffff' }}>JEET</span>
         <br />
         <span style={{
-          background: 'linear-gradient(135deg, #ff758c 0%, #ffb199 100%)',
+          background: 'linear-gradient(135deg, #3333FF 0%, #00C8FF 100%)',
           WebkitBackgroundClip: 'text',
           WebkitTextFillColor: 'transparent',
           backgroundClip: 'text',
@@ -62,7 +62,7 @@ const Hero = () => {
         fontFamily: "'Outfit', sans-serif",
         fontSize: 'clamp(1rem, 2.5vw, 1.4rem)',
         fontWeight: 400,
-        color: 'rgba(45,36,36,0.65)',
+        color: 'rgba(226, 232, 240, 0.75)',
         marginBottom: 36,
         letterSpacing: '0.02em',
         opacity: visible ? 1 : 0,
@@ -77,9 +77,9 @@ const Hero = () => {
         maxWidth: 680,
         marginBottom: 48,
         padding: '24px 28px',
-        background: 'rgba(255,255,255,0.65)',
-        border: '1px solid rgba(255,117,140,0.15)',
-        borderLeft: '4px solid #ff758c',
+        background: 'rgba(13, 19, 36, 0.75)',
+        border: '1px solid rgba(51, 51, 255, 0.25)',
+        borderLeft: '4px solid #3333FF',
         borderRadius: 14,
         backdropFilter: 'blur(10px)',
         opacity: visible ? 1 : 0,
@@ -89,7 +89,7 @@ const Hero = () => {
         <p style={{
           fontSize: '1.05rem',
           lineHeight: 1.75,
-          color: 'rgba(45,36,36,0.8)',
+          color: 'rgba(248, 250, 252, 0.88)',
           fontStyle: 'italic',
         }}>
           "A driven learner blending full-stack development, cybersecurity, and problem-solving,
@@ -120,7 +120,7 @@ const Hero = () => {
         top: '10%', right: '-5%',
         width: 380, height: 380,
         borderRadius: '50%',
-        background: 'radial-gradient(circle, rgba(255,117,140,0.12) 0%, transparent 70%)',
+        background: 'radial-gradient(circle, rgba(51, 51, 255, 0.15) 0%, transparent 70%)',
         filter: 'blur(40px)',
         pointerEvents: 'none',
         animation: 'orbFloat 8s ease-in-out infinite alternate',

@@ -29,13 +29,13 @@ const Skills = () => {
       }}>
         My{' '}
         <span style={{
-          background: 'linear-gradient(135deg, #ff758c, #ffb199)',
+          background: 'linear-gradient(135deg, #3333FF, #00C8FF)',
           WebkitBackgroundClip: 'text',
           WebkitTextFillColor: 'transparent',
           backgroundClip: 'text',
         }}>Tech Stack</span>
       </h2>
-      <p style={{ fontSize: '1rem', color: 'rgba(45,36,36,0.6)', marginBottom: 48 }}>
+      <p style={{ fontSize: '1rem', color: 'rgba(226, 232, 240, 0.70)', marginBottom: 48 }}>
         Skills I actively use to build and ship products.
       </p>
 
@@ -46,9 +46,9 @@ const Skills = () => {
         }
         .skills-card:hover {
           transform: translateY(-6px) scale(1.02) !important;
-          background: rgba(255, 255, 255, 0.85) !important;
+          background: rgba(20, 30, 56, 0.90) !important;
           border-color: var(--bar-color) !important;
-          box-shadow: 0 14px 40px rgba(45, 36, 36, 0.05), var(--bar-color) 0px 0px 20px -5px !important;
+          box-shadow: 0 14px 40px rgba(0, 0, 0, 0.40), var(--bar-color) 0px 0px 20px -5px !important;
         }
         .skill-icon-container {
           transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
@@ -95,7 +95,7 @@ const Skills = () => {
                   <div style={{ fontFamily: "'Outfit', sans-serif", fontWeight: 700, fontSize: '1rem' }}>
                     {skill.name}
                   </div>
-                  <div style={{ fontSize: '0.75rem', color: 'rgba(45,36,36,0.6)', marginTop: 2 }}>
+                  <div style={{ fontSize: '0.75rem', color: 'rgba(226, 232, 240, 0.65)', marginTop: 2 }}>
                     {skill.category}
                   </div>
                 </div>
@@ -114,7 +114,7 @@ const Skills = () => {
             {/* Progress Track */}
             <div style={{
               width: '100%', height: 5,
-              background: 'rgba(45,36,36,0.05)',
+              background: 'rgba(255,255,255,0.08)',
               borderRadius: 99, overflow: 'hidden',
             }}>
               <div 

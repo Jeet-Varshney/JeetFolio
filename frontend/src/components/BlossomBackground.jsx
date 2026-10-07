@@ -50,12 +50,12 @@ const BlossomBackground = () => {
         this.spin = (Math.random() - 0.5) * 0.1; // rotation speed
         this.opacity = Math.random() * 0.5 + 0.3; // 0.3 to 0.8
         
-        // Rose Gold shades for petals
+        // Vibrant Electric Blue & Cyan shades for dark background
         const colors = [
-          'rgba(255, 117, 140, ', // Rose
-          'rgba(255, 177, 153, ', // Peach/Gold
-          'rgba(255, 150, 165, ', // Soft Pink
-          'rgba(253, 164, 175, '  // Rose 300
+          'rgba(51, 51, 255, ',   // Electric Blue (#3333FF)
+          'rgba(0, 200, 255, ',   // Vivid Cyan (#00C8FF)
+          'rgba(99, 102, 241, ',  // Indigo Accent (#6366F1)
+          'rgba(59, 130, 246, '   // Sapphire Blue (#3B82F6)
         ];
         this.colorBase = colors[Math.floor(Math.random() * colors.length)];
       }
@@ -143,7 +143,7 @@ const BlossomBackground = () => {
         height: '100%',
         pointerEvents: 'none', // Allow clicks to pass through
         zIndex: 0, // Behind content
-        background: 'linear-gradient(to bottom, #fffdf5, #fff5ec)', // Very soft cream/warm yellow
+        background: 'radial-gradient(ellipse at top, #0d1527 0%, #070a14 60%, #04060c 100%)', // Rich deep dark blue background
       }}
     />
   );
