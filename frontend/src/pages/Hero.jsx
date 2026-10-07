@@ -11,8 +11,6 @@ const Hero = () => {
 
   return (
     <section className="page-container" style={{ alignItems: 'flex-start', gap: 0 }}>
-
-      {/* Badge */}
       <div style={{
         display: 'inline-flex', alignItems: 'center', gap: 8,
         padding: '6px 14px',
@@ -36,7 +34,6 @@ const Hero = () => {
         }}>Available for opportunities</span>
       </div>
 
-      {/* Name */}
       <h1 style={{
         fontFamily: "'Outfit', sans-serif",
         fontSize: 'clamp(3.2rem, 9vw, 7rem)',
@@ -57,7 +54,6 @@ const Hero = () => {
         }}>VARSHNEY</span>
       </h1>
 
-      {/* Subtitle */}
       <h2 style={{
         fontFamily: "'Outfit', sans-serif",
         fontSize: 'clamp(1rem, 2.5vw, 1.4rem)',
@@ -72,7 +68,6 @@ const Hero = () => {
         Full-Stack Developer &nbsp;·&nbsp; Cybersecurity &nbsp;·&nbsp; Problem Solver
       </h2>
 
-      {/* Bio Card */}
       <div style={{
         maxWidth: 680,
         marginBottom: 48,
@@ -98,7 +93,6 @@ const Hero = () => {
         </p>
       </div>
 
-      {/* CTAs */}
       <div style={{
         display: 'flex', gap: 14, flexWrap: 'wrap',
         opacity: visible ? 1 : 0,
@@ -114,7 +108,6 @@ const Hero = () => {
         </NavLink>
       </div>
 
-      {/* Floating decorative orb */}
       <div style={{
         position: 'absolute',
         top: '10%', right: '-5%',

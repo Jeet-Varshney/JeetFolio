@@ -39,7 +39,6 @@ const Skills = () => {
         Skills I actively use to build and ship products.
       </p>
 
-      {/* Inject styling for premium hover mechanics and glow */}
       <style>{`
         .skills-card {
           transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
@@ -76,7 +75,6 @@ const Skills = () => {
               '--bar-color': skill.color,
             }}
           >
-            {/* Header */}
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 20 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                 <div 
@@ -111,7 +109,6 @@ const Skills = () => {
               </div>
             </div>
 
-            {/* Progress Track */}
             <div style={{
               width: '100%', height: 5,
               background: 'rgba(255,255,255,0.08)',

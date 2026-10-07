@@ -7,7 +7,6 @@ const NAV_LINKS = ['About', 'Skills', 'Projects', 'Contact'];
 const Layout = () => {
   const location = useLocation();
 
-  // Scroll to top on route change
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [location.pathname]);
@@ -16,7 +15,6 @@ const Layout = () => {
     <>
       <BlossomBackground />
       
-      {/* ── Navigation ── */}
       <nav style={{
         position: 'fixed',
         top: 18,
@@ -38,7 +36,6 @@ const Layout = () => {
         WebkitBackdropFilter: 'blur(20px)',
         transition: 'all 0.3s ease',
       }}>
-        {/* Logo */}
         <NavLink to="/" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none' }}>
           <div style={{
             width: 32, height: 32, borderRadius: 9,
@@ -54,7 +51,6 @@ const Layout = () => {
           }}>Jeet<span style={{ color: '#00C8FF' }}>.</span></span>
         </NavLink>
 
-        {/* Nav Links */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
           {NAV_LINKS.map((item) => (
             <NavLink
@@ -95,7 +91,6 @@ const Layout = () => {
         </div>
       </nav>
 
-      {/* ── Main Content ── */}
       <div style={{
         position: 'relative', zIndex: 1,
         maxWidth: 1100, margin: '0 auto', padding: '0 24px',
@@ -103,7 +98,6 @@ const Layout = () => {
         <Outlet />
       </div>
 
-      {/* ── Footer ── */}
       <footer style={{
         position: 'relative', zIndex: 1,
         maxWidth: 1100, margin: '0 auto',

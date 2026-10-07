@@ -1,6 +1,5 @@
 import React from 'react';
 
-// Raw SVGs for perfect logos
 const MailIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <rect width="20" height="16" x="2" y="4" rx="2"></rect><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
@@ -52,16 +51,13 @@ const Contact = () => {
         Hover over the cards to view details and connect.
       </p>
 
-      {/* Inject pure CSS for flawless, 0-delay hover mechanics */}
       <style>{`
-        /* Close stack by default */
         .card-hand .contact-card:nth-child(1) { transform: rotate(-15deg) translateX(-18px); }
         .card-hand .contact-card:nth-child(2) { transform: rotate(-5deg) translateX(-5px); }
         .card-hand .contact-card:nth-child(3) { transform: rotate(5deg) translateX(5px); }
         .card-hand .contact-card:nth-child(4) { transform: rotate(15deg) translateX(18px); }
 
         .card-hand:hover .contact-card {
-          /* Dim unhovered cards slightly, but keep them opaque to avoid bleed-through */
           opacity: 0.65;
           z-index: 1;
         }
@@ -70,13 +66,11 @@ const Contact = () => {
           transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        /* Fanning out when hand is hovered */
         .card-hand:hover .contact-card:nth-child(1) { transform: rotate(-28deg) translateX(-64px) translateY(12px) !important; }
         .card-hand:hover .contact-card:nth-child(2) { transform: rotate(-9deg) translateX(-20px) translateY(2px) !important; }
         .card-hand:hover .contact-card:nth-child(3) { transform: rotate(9deg) translateX(20px) translateY(2px) !important; }
         .card-hand:hover .contact-card:nth-child(4) { transform: rotate(28deg) translateX(64px) translateY(12px) !important; }
 
-        /* Elevating and straightening the active card */
         .card-hand:hover .contact-card:hover {
           transform: translateY(-64px) rotate(0deg) scale(1.15) !important;
           opacity: 1 !important;
@@ -90,7 +84,6 @@ const Contact = () => {
         }
       `}</style>
 
-      {/* Card Hand Container */}
       <div 
         className="card-hand"
         style={{
@@ -125,7 +118,7 @@ const Contact = () => {
                   style={{
                     width: '100%',
                     height: '100%',
-                    background: 'rgba(13, 19, 36, 0.88)', // Dark midnight playing card
+                    background: 'rgba(13, 19, 36, 0.88)',
                     borderRadius: 16,
                     border: '1px solid rgba(51, 51, 255, 0.30)',
                     boxShadow: '0 12px 36px rgba(0,0,0,0.50)',
@@ -136,7 +129,6 @@ const Contact = () => {
                     position: 'relative',
                   }}
                 >
-                  {/* Top Left Icon */}
                   <div style={{ 
                     display: 'flex', flexDirection: 'column', alignItems: 'center', 
                     position: 'absolute', top: 18, left: 18,
@@ -145,7 +137,6 @@ const Contact = () => {
                     {c.icon}
                   </div>
 
-                  {/* Center Content */}
                   <div style={{ 
                     flex: 1, display: 'flex', flexDirection: 'column', 
                     alignItems: 'center', justifyContent: 'center',
@@ -171,7 +162,6 @@ const Contact = () => {
                        {c.value}
                      </span>
                      
-                     {/* Action button appears on hover */}
                      <div 
                        className="action-btn"
                        style={{
@@ -194,7 +184,6 @@ const Contact = () => {
                      </div>
                   </div>
 
-                  {/* Bottom Right Icon (Inverted) */}
                   <div style={{ 
                     display: 'flex', flexDirection: 'column', alignItems: 'center', 
                     position: 'absolute', bottom: 18, right: 18,

@@ -35,7 +35,6 @@ const About = () => {
         problem-solving — who values perfection over speed and thrives under challenge.
       </p>
 
-      {/* Stat Bar */}
       <div style={{
         display: 'flex', gap: 0,
         border: '1px solid rgba(51, 51, 255, 0.25)',
@@ -69,7 +68,6 @@ const About = () => {
         ))}
       </div>
 
-      {/* Cards */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 20 }}>
         <div className="card">
           <div style={{ fontSize: '1.6rem', marginBottom: 14 }}>🧠</div>

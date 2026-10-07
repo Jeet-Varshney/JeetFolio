@@ -145,16 +145,13 @@ const Projects = () => {
       `}</style>
 
       <div className="projects-wrapper">
-        {/* GARAJ Card */}
         <div className="project-card">
-          {/* Image Column */}
           <div className="project-image-sec">
             <img
               src={garajDashboard}
               alt="GARAJ AI Real-Time Voice Cloning Detection Dashboard"
               className="project-image"
             />
-            {/* Top colored accent line indicator */}
             <div
               style={{
                 position: 'absolute',
@@ -167,7 +164,6 @@ const Projects = () => {
             />
           </div>
 
-          {/* Details Column */}
           <div className="project-details-sec">
             <div
               style={{
@@ -239,7 +235,6 @@ const Projects = () => {
               An actively developed AI-powered real-time cybersecurity system designed to detect synthetic and voice-cloned speech across Hindi and English audio. GARAJ streams incoming speech channels and analyzes spectro-temporal features to differentiate between authentic (REAL) and voice-cloned (SYNTHETIC) speech.
             </p>
 
-            {/* Key Features List */}
             <div
               style={{
                 display: 'flex',
@@ -260,7 +255,6 @@ const Projects = () => {
               ))}
             </div>
 
-            {/* Tech Stack Tags */}
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginBottom: 28 }}>
               {garajTags.map((tag) => (
                 <span key={tag} className="tag">
@@ -269,7 +263,6 @@ const Projects = () => {
               ))}
             </div>
 
-            {/* Action Buttons */}
             <div className="action-buttons">
               <a
                 href="https://garaj-voice.vercel.app/"
@@ -305,16 +298,13 @@ const Projects = () => {
           </div>
         </div>
 
-        {/* Nextt Campus Card */}
         <div className="project-card">
-          {/* Image Column */}
           <div className="project-image-sec">
             <img
               src={nexttDashboard}
               alt="Nextt Campus Dashboard Mockup"
               className="project-image"
             />
-            {/* Top colored line indicator */}
             <div
               style={{
                 position: 'absolute',
@@ -327,7 +317,6 @@ const Projects = () => {
             />
           </div>
 
-          {/* Details Column */}
           <div className="project-details-sec">
             <div
               style={{
@@ -429,4 +418,3 @@ const Projects = () => {
 };
 
 export default Projects;
-
